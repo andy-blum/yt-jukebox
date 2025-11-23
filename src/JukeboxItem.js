@@ -77,8 +77,10 @@ export class JukeboxItem {
   togglePlayPause() {
     const playerState = this.player.getPlayerState();
     if (playerState === YT.PlayerState.PLAYING) {
+      this.listItem.classList.remove('playing');
       this.player.pauseVideo();
     } else {
+      this.listItem.classList.add('playing');
       this.player.playVideo();
     }
   }
