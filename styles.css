@@ -1,0 +1,11 @@
+:root {
+  background-color: #121212;
+  color: #ddd;
+  font-family: 'Noto Music', sans-serif;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}

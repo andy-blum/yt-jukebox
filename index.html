@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Youtube Jukebox</title>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=noto-music:400" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://www.youtube.com/iframe_api" defer></script>
+  <script src="/script.js" type="module"></script>
+</head>
+<body>
+  <template>
+    <li>
+      <div id="player"></div>
+      <span class="label"></span>
+      <button class="play-button">Play</button>
+      <button class="pause-button">Pause</button>
+      <button class="stop-button">Stop</button>
+      <button class="remove-button">Remove</button>
+      <input type="range" name="volume" id="volume" min="0" max="100" value="100">
+    </li>
+  </template>
+  <main>
+    <form id="add_song">
+      <div>
+        <label for="video-url">YouTube Video URL:</label>
+        <input type="text" id="video-url" name="video-url" placeholder="Enter YouTube video URL" required />
+      </div>
+
+      <div>
+        <label for="label">Custom Label:</label>
+        <input type="text" id="label" name="label" placeholder="Enter custom label" required />
+      </div>
+
+      <button type="submit">Add to Jukebox</button>
+    </form>
+
+    <ul id="jukebox-list">
+    </ul>
+  </main>
+</body>
+</html>
