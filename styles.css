@@ -1,11 +1,222 @@
+/* Modern dark theme for Youtube Jukebox */
 :root {
-  background-color: #121212;
-  color: #ddd;
-  font-family: 'Noto Music', sans-serif;
+  --bg: #0f1720;              /* page background */
+  --surface: #0b1220;         /* cards / panels */
+  --muted: #9aa4b2;           /* muted text */
+  --text: #e6eef6;            /* main text */
+  --accent: #ff4d6d;          /* primary accent (play) */
+  --accent-2: #6dd3ff;        /* secondary accent */
+  --glass: rgba(255,255,255,0.03);
+  --radius: 12px;
+  --shadow: 0 6px 18px rgba(2,6,23,0.6);
+  font-family: 'Noto Music', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-main {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+/* Page */
+html,body{
+  height:100%;
 }
+body{
+  margin:0;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(109,211,255,0.04), transparent),
+              radial-gradient(900px 400px at 90% 90%, rgba(255,77,109,0.03), transparent),
+              var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+main{
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+}
+
+/* Card container to hold form + list */
+main > *{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: var(--radius);
+  padding:20px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Form */
+#add_song{
+  display:grid;
+  grid-template-columns: 1fr 1fr auto;
+  grid-template-rows: auto auto;
+  gap:12px;
+  align-items:center;
+}
+
+#add_song div{
+  display:flex;
+  flex-direction:column;
+}
+
+label{
+  grid-row: 1;
+  font-size:0.85rem;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+input[type="text"]{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.04);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:10px;
+  outline:none;
+  transition:box-shadow .15s, border-color .15s, transform .06s;
+  grid-row: 2;
+}
+
+input[type="text"]::placeholder{ color: rgba(230,238,246,0.35); }
+
+input[type="text"]:focus{
+  border-color: rgba(109,211,255,0.22);
+  box-shadow:0 4px 14px rgba(109,211,255,0.06);
+  transform:translateY(-1px);
+}
+
+#add_song button[type="submit"]{
+  background: linear-gradient(90deg,var(--accent), #da546f);
+  color:white;
+  border:none;
+  padding: 8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  transition:transform .08s ease, box-shadow .08s ease, opacity .08s;
+  grid-row: 2;
+}
+
+#add_song button[type="submit"]:hover{ transform:translateY(-2px); }
+#add_song button[type="submit"]:active{ transform:translateY(0); opacity:0.95; }
+
+/* Jukebox list */
+#jukebox-list{
+  list-style:none;
+  margin:18px 0 0 0;
+  padding:0;
+  display:grid;
+  gap:14px;
+}
+
+#jukebox-list li{
+  display:grid;
+  grid-template-columns: auto 1fr auto;
+  gap:14px;
+  align-items:center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+  padding:14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+/* Player area (YouTube iframe goes inside #player) */
+#jukebox-list li .thumbnail{
+  aspect-ratio: 16/9;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+#jukebox-list li button {
+  grid-column: 3;
+}
+
+.player-wrapper{
+  width:100%;
+  aspect-ratio:16 / 9;
+  background:#071018;
+  border-radius:8px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#jukebox-list li iframe{
+  position: absolute;
+  visibility: hidden;
+}
+
+/* Label + metadata */
+#jukebox-list li .label{
+  font-weight:700;
+  color:var(--text);
+  display:block;
+  margin-bottom:8px;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Controls */
+.controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+button{
+  background:transparent;
+  color:var(--text);
+  border:1px solid rgba(255,255,255,0.04);
+  padding:8px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:transform .06s ease, background .08s ease, border-color .08s;
+}
+
+button:hover{ transform:translateY(-2px); border-color: rgba(255,255,255,0.08); }
+
+.play-pause{
+  background: linear-gradient(90deg,var(--accent-2), rgba(109,211,255,0.18));
+  color:#00202a;
+  border:none;
+}
+
+.remove-button{ background: transparent; color: #ffb6c2; border-color: rgba(255,77,109,0.12); }
+
+/* Volume range */
+input[type="range"]{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:8px;
+  background:linear-gradient(90deg,var(--accent-2), rgba(255,255,255,0.06));
+  border-radius:8px;
+  outline:none;
+  grid-column: 2;
+  grid-row: 2;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:linear-gradient(180deg,#fff, #dfeef8);
+  box-shadow:0 2px 6px rgba(2,6,23,0.6);
+  border:3px solid var(--accent-2);
+}
+
+/* Responsive adjustments */
+@media (max-width:880px){
+  #add_song{ grid-template-columns: 1fr; }
+  #jukebox-list li{ grid-template-columns: 1fr; }
+  #jukebox-list li .controls{ justify-content:space-between; }
+}
+
+@media (max-width:420px){
+  main{ padding:16px; margin:18px auto; }
+  #add_song button[type="submit"]{ width:100%; }
+}
+
+/* Small helper text */
+small{ color:var(--muted); }
+
+/* Accessibility focus */
+:focus{ outline: 3px solid rgba(109,211,255,0.14); outline-offset:2px; }

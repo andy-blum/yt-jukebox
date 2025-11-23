@@ -3,10 +3,12 @@ const template = document.querySelector('template');
 export class JukeboxItem {
   constructor(videoUrl, label) {
     this.videoId = this.extractVideoID(videoUrl);
+    this.id = `item-${Math.random().toString(36).slice(2)}`;
+
     if (!this.videoId) {
       throw new Error('Invalid YouTube URL');
     }
-    this.label = label || 'Untitled';
+    this.label = label || '';
     this.createListItem();
 
     if (!window.jukebox) {
@@ -21,48 +23,64 @@ export class JukeboxItem {
     return match ? match[1] : null;
   }
 
+  injectVideo() {
+
+    this.player = new YT.Player(`${this.id}-player`, {
+      height: '0',
+      width: '0',
+      videoId: this.videoId,
+      playerVars: {
+        'controls': 0,
+      },
+      events: {
+        'onReady': this.videoReady.bind(this),
+      }
+    });
+
+  }
+
   createListItem() {
-    const listItem = template.content.firstElementChild.cloneNode(true);
-    listItem.querySelector('.label').textContent = this.label;
+    this.listItem = template.content.firstElementChild.cloneNode(true);
+    this.listItem.id = this.id;
 
-    const player = listItem.querySelector('#player');
-    player.id = `${player.id}-${Date.now()}`;
+    this.listItem.querySelector('.label').textContent = this.label;
 
-    const playButton = listItem.querySelector('.play-button');
-    playButton.addEventListener('click', () => this.playVideo());
+    const player = this.listItem.querySelector('#player');
+    player.id = `${this.id}-player`;
 
-    const removeButton = listItem.querySelector('.remove-button');
-    removeButton.addEventListener('click', () => this.removeItem(listItem));
+    const playPauseButton = this.listItem.querySelector('.play-pause');
+    playPauseButton.addEventListener('click', () => this.togglePlayPause());
 
-    const pauseButton = listItem.querySelector('.pause-button');
-    pauseButton.addEventListener('click', () => this.pauseVideo());
+    const removeButton = this.listItem.querySelector('.remove-button');
+    removeButton.addEventListener('click', () => this.removeItem(this.listItem));
 
-    const volumeSlider = listItem.querySelector('#volume');
+    const volumeSlider = this.listItem.querySelector('.volume');
     volumeSlider.addEventListener('input', (event) => this.setVolume(event.target.value));
 
+    const thumbnailImg = this.listItem.querySelector('.thumbnail');
+    thumbnailImg.src = `https://img.youtube.com/vi/${this.videoId}/default.jpg`;
+
     const jukeboxList = document.getElementById('jukebox-list');
-    jukeboxList.appendChild(listItem);
+    jukeboxList.appendChild(this.listItem);
 
     setTimeout(() => {
-      this.player = new YT.Player(player.id, {
-        height: '100',
-        width: '100',
-        videoId: this.videoId,
-        playerVars: {
-          'controls': 0,
-        },
-        events: {}
-      });
-    }, 10);
+      this.injectVideo();
+    }, 100);
   }
 
-  playVideo() {
-    // this.player.loadVideoById(this.videoId);
-    this.player.playVideo();
+  videoReady() {
+    if (!this.label) {
+      this.listItem.querySelector('.label').textContent = this.player.videoTitle;
+    }
   }
 
-  pauseVideo() {
-    this.player.pauseVideo();
+  togglePlayPause() {
+    const playerState = this.player.getPlayerState();
+    if (playerState === YT.PlayerState.PLAYING) {
+      this.player.pauseVideo();
+    } else {
+      this.player.playVideo();
+    }
   }
 
   setVolume(volume) {
